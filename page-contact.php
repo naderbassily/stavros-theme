@@ -91,7 +91,6 @@ get_header();
     <div class="contact-page-form-copy">
       <div class="sec-header">
         <span class="sec-label sec-label-light">// Get In Touch</span>
-        <span class="sec-line-light"></span>
       </div>
       <h2 class="sec-title-light">Simple outreach.<br/><em>Direct response.</em></h2>
       <p class="contact-page-copy">

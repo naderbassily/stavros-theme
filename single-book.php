@@ -172,7 +172,6 @@ while ( have_posts() ) :
         <div class="single-book-body-main">
           <div class="sec-header">
             <span class="sec-label sec-label-light">// About This Book</span>
-            <span class="sec-line-light"></span>
           </div>
           <h2 class="sec-title-light"><?php the_title(); ?></h2>
           <?php if ( $book_content ) : ?>
@@ -219,7 +218,6 @@ while ( have_posts() ) :
       <div class="single-book-shell">
         <div class="sec-header">
           <span class="sec-label sec-label-dark">// Related Books</span>
-          <span class="sec-line-dark"></span>
         </div>
         <h2 class="sec-title-dark">Explore More <em>Publications</em></h2>
 
@@ -229,24 +227,7 @@ while ( have_posts() ) :
             $related_genres = get_the_terms( get_the_ID(), 'genre' );
             $related_label  = ( ! is_wp_error( $related_genres ) && ! empty( $related_genres ) ) ? $related_genres[0]->name : __( 'Published Work', 'stavros-basta' );
             ?>
-            <article class="book-card">
-              <a class="book-card-link" href="<?php the_permalink(); ?>">
-                <div class="book-cover">
-                  <?php if ( has_post_thumbnail() ) : ?>
-                    <?php the_post_thumbnail( 'large', [ 'class' => 'book-cover-img', 'alt' => get_the_title() ] ); ?>
-                  <?php else : ?>
-                    <div class="book-cover-ph">
-                      <span>Stavros E. Basta</span>
-                    </div>
-                  <?php endif; ?>
-                </div>
-                <div class="book-info">
-                  <div class="book-tag"><?php echo esc_html( $related_label ); ?></div>
-                  <h3 class="book-title"><?php the_title(); ?></h3>
-                  <p class="book-desc"><?php echo esc_html( get_the_excerpt() ); ?></p>
-                </div>
-              </a>
-            </article>
+            <?php get_template_part( 'template-parts/book-card', null, [ 'label' => $related_label ] ); ?>
           <?php endwhile; ?>
           <?php wp_reset_postdata(); ?>
         </div>

@@ -1,9 +1,9 @@
 <section class="contact-section" id="contact">
   <div class="contact-left">
-    <div class="sec-header" style="margin-bottom:20px;">
-      <span class="sec-label sec-label-light">// 06 &mdash; Engage</span>
+    <div class="sec-header sec-header-compact">
+      <span class="sec-label sec-label-light">// 05 &mdash; Engage</span>
     </div>
-    <h2 class="sec-title-light" style="margin-bottom:0;">Speaking,<br/>Consulting &amp;<br/><em>Collaboration</em></h2>
+    <h2 class="sec-title-light sec-title-flush">Speaking,<br/>Consulting &amp;<br/><em>Collaboration</em></h2>
     <p class="contact-text">
       Available for keynote speaking, executive consulting, academic collaboration, and expert advisory engagements in cybersecurity, ICS protection, and critical infrastructure resilience.
     </p>

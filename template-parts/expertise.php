@@ -1,7 +1,6 @@
 <section class="expertise" id="expertise">
   <div class="sec-header">
     <span class="sec-label sec-label-light">// 01 &mdash; Core Domains</span>
-    <span class="sec-line-light"></span>
   </div>
   <h2 class="sec-title-light">Areas of <em>Expertise</em></h2>
 

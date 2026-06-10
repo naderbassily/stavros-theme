@@ -1,7 +1,6 @@
 <section class="coming-soon-section" id="coming-soon">
   <div class="sec-header">
     <span class="sec-label sec-label-dark">// 04 &mdash; Coming Soon</span>
-    <span class="sec-line-dark"></span>
   </div>
   <h2 class="sec-title-dark">Upcoming <em>Books</em></h2>
 
@@ -25,13 +24,21 @@
   ];
   ?>
 
-  <div class="coming-grid">
+  <div class="books-grid coming-books-grid">
     <?php foreach ( $coming_soon_books as $coming_book ) : ?>
-      <article class="coming-card">
-        <span class="coming-card-tag"><?php echo esc_html( $coming_book['track'] ); ?></span>
-        <h3 class="coming-card-title"><?php echo esc_html( $coming_book['title'] ); ?></h3>
-        <p class="coming-card-text"><?php echo esc_html( $coming_book['note'] ); ?></p>
-      </article>
+      <?php
+      get_template_part(
+        'template-parts/book-card',
+        null,
+        [
+          'label'       => $coming_book['track'],
+          'title'       => $coming_book['title'],
+          'description' => $coming_book['note'],
+          'url'         => '',
+          'placeholder' => true,
+        ]
+      );
+      ?>
     <?php endforeach; ?>
   </div>
 </section>

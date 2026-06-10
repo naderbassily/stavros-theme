@@ -23,7 +23,6 @@ get_header();
     <div class="about-overview-main">
       <div class="sec-header">
         <span class="sec-label sec-label-light">// 01 &mdash; Professional Overview</span>
-        <span class="sec-line-light"></span>
       </div>
       <h2 class="sec-title-light">Academic Depth.<br/><em>Operational Focus.</em></h2>
       <div class="about-copy">
@@ -58,7 +57,6 @@ get_header();
   <section class="about-focus">
     <div class="sec-header">
       <span class="sec-label sec-label-dark">// 02 &mdash; Focus Areas</span>
-      <span class="sec-line-dark"></span>
     </div>
     <h2 class="sec-title-dark">Where Research Meets<br/><em>Real-World Security</em></h2>
 
@@ -117,6 +115,8 @@ get_header();
       </div>
     </div>
   </section>
+
+  <?php get_template_part('template-parts/certifications'); ?>
 
   <section class="about-page-cta">
     <div class="about-page-cta-inner">

@@ -5,7 +5,6 @@
 
 get_header();
 
-$book_svg = '<svg width="30" height="38" viewBox="0 0 30 38" fill="none"><rect x="3" y="2" width="24" height="34" stroke="#2a2a2a" stroke-width="1.2"/><line x1="7" y1="9" x2="23" y2="9" stroke="#2a2a2a" stroke-width="0.8"/><line x1="7" y1="15" x2="23" y2="15" stroke="#2a2a2a" stroke-width="0.8"/><line x1="7" y1="21" x2="17" y2="21" stroke="#2a2a2a" stroke-width="0.8"/></svg>';
 $archive_title = post_type_archive_title( '', false );
 $archive_description = get_the_archive_description();
 ?>
@@ -31,7 +30,6 @@ $archive_description = get_the_archive_description();
     <div class="books-archive-shell">
       <div class="sec-header">
         <span class="sec-label sec-label-dark">// Archive Collection</span>
-        <span class="sec-line-dark"></span>
       </div>
       <h2 class="sec-title-dark">Browse All <em>Titles</em></h2>
 
@@ -42,25 +40,7 @@ $archive_description = get_the_archive_description();
             $genre_terms = get_the_terms( get_the_ID(), 'genre' );
             $book_label  = ( ! is_wp_error( $genre_terms ) && ! empty( $genre_terms ) ) ? $genre_terms[0]->name : __( 'Published Work', 'stavros-basta' );
             ?>
-            <article class="book-card">
-              <a class="book-card-link" href="<?php the_permalink(); ?>">
-                <div class="book-cover">
-                  <?php if ( has_post_thumbnail() ) : ?>
-                    <?php the_post_thumbnail( 'large', [ 'class' => 'book-cover-img', 'alt' => get_the_title() ] ); ?>
-                  <?php else : ?>
-                    <div class="book-cover-ph">
-                      <?php echo $book_svg; ?>
-                      Publication Preview
-                    </div>
-                  <?php endif; ?>
-                </div>
-                <div class="book-info">
-                  <div class="book-tag"><?php echo esc_html( $book_label ); ?></div>
-                  <h3 class="book-title"><?php the_title(); ?></h3>
-                  <p class="book-desc"><?php echo esc_html( get_the_excerpt() ); ?></p>
-                </div>
-              </a>
-            </article>
+            <?php get_template_part( 'template-parts/book-card', null, [ 'label' => $book_label ] ); ?>
           <?php endwhile; ?>
         </div>
 

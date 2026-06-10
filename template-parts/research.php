@@ -1,13 +1,13 @@
 <section class="publications" id="research">
   <div class="pub-left">
-    <div class="sec-header" style="margin-bottom:20px;">
+    <div class="sec-header sec-header-compact">
       <span class="sec-label sec-label-light">// 03 &mdash; Papers &amp; Reading</span>
     </div>
-    <h2 class="sec-title-light" style="margin-bottom:0;">Selected Papers<br/>&amp; <em>Reading</em></h2>
+    <h2 class="sec-title-light sec-title-flush">Selected Papers<br/>&amp; <em>Reading</em></h2>
     <p class="pub-body">
       Stavros Basta's research and publication work spans industrial control systems, critical infrastructure, adversarial analytics, AI-driven security, and the weaknesses of legacy models when applied to operational environments.
     </p>
-    <p class="pub-note">This area can later be connected to a full papers archive and reading library once the new post type is created.</p>
+    <p class="pub-note">A focused selection of current research themes and publication tracks.</p>
   </div>
 
   <div class="pub-right">
@@ -37,7 +37,7 @@
           <div class="pub-title"><?php echo esc_html( $pub['title'] ); ?></div>
           <div class="pub-meta"><?php echo esc_html( $pub['meta'] ); ?></div>
           <p class="pub-card-text"><?php echo esc_html( $pub['text'] ); ?></p>
-          <div class="pub-card-footer">Research archive placeholder</div>
+          <div class="pub-card-footer">Research focus</div>
         </article>
       <?php endforeach; ?>
     </div>

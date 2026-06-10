@@ -1,7 +1,6 @@
 <section class="certifications" id="certifications">
   <div class="sec-header">
-    <span class="sec-label sec-label-dark">// 05 &mdash; Credentials</span>
-    <span class="sec-line-dark"></span>
+    <span class="sec-label sec-label-dark">// 04 &mdash; Credentials</span>
   </div>
   <h2 class="sec-title-dark">Professional <em>Certifications</em></h2>
 

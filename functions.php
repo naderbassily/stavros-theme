@@ -15,6 +15,8 @@ add_action( 'after_setup_theme', 'stavros_setup' );
 
 // ── Enqueue styles & scripts ─────────────────────────────────
 function stavros_enqueue_assets() {
+    $main_css_path = get_theme_file_path( '/assets/css/main.css' );
+
     // Google Fonts
     wp_enqueue_style(
         'stavros-fonts',
@@ -28,7 +30,7 @@ function stavros_enqueue_assets() {
         'stavros-main',
         get_template_directory_uri() . '/assets/css/main.css',
         [ 'stavros-fonts' ],
-        wp_get_theme()->get( 'Version' )
+        file_exists( $main_css_path ) ? filemtime( $main_css_path ) : wp_get_theme()->get( 'Version' )
     );
 }
 add_action( 'wp_enqueue_scripts', 'stavros_enqueue_assets' );
