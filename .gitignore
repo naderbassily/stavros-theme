@@ -1,0 +1,20 @@
+.DS_Store
+Thumbs.db
+
+# Editor and local environment files
+.vscode/
+.idea/
+.claude/settings.local.json
+*.swp
+*.swo
+
+# Dependencies and build output
+node_modules/
+vendor/
+dist/
+build/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
