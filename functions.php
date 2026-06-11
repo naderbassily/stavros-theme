@@ -168,6 +168,34 @@ function stavros_contact_url() {
     return stavros_section_url( 'contact' );
 }
 
+function stavros_contact_recipient_email() {
+    return 'me@naderamsis.com';
+}
+
+function stavros_contact_display_email() {
+    return 'contact@stavrosbasta.com';
+}
+
+function stavros_contact_from_email() {
+    $host = wp_parse_url( home_url(), PHP_URL_HOST );
+    $host = $host ? preg_replace( '/^www\./i', '', $host ) : 'localhost';
+
+    return 'no-reply@' . $host;
+}
+
+function stavros_contact_mail_headers( $reply_name = '', $reply_email = '' ) {
+    $headers = [
+        'Content-Type: text/plain; charset=UTF-8',
+        'From: Stavros Basta Website <' . stavros_contact_from_email() . '>',
+    ];
+
+    if ( $reply_name && $reply_email && is_email( $reply_email ) ) {
+        $headers[] = 'Reply-To: ' . sanitize_text_field( $reply_name ) . ' <' . sanitize_email( $reply_email ) . '>';
+    }
+
+    return $headers;
+}
+
 function stavros_get_result_excerpt( $post_id = null, $word_count = 28 ) {
     $post = get_post( $post_id ?: get_the_ID() );
 

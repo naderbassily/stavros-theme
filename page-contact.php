@@ -3,9 +3,9 @@
 Template Name: Contact Us
 */
 
-$admin_email           = 'me@naderamsis.com';
-$display_contact_email = 'contact@stavrosbasta.com';
-$contact_link          = 'mailto:' . antispambot( $admin_email );
+$admin_email           = stavros_contact_recipient_email();
+$display_contact_email = stavros_contact_display_email();
+$contact_link          = 'mailto:' . antispambot( $display_contact_email );
 $form_values   = [
     'name'    => '',
     'email'   => '',
@@ -52,9 +52,15 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['stavros_contact_sub
                 "Message:\n" . $form_values['message'],
             ]
         );
-        $headers       = [
-            'Reply-To: ' . $form_values['name'] . ' <' . $form_values['email'] . '>',
-        ];
+        $headers            = stavros_contact_mail_headers( $form_values['name'], $form_values['email'] );
+        $mail_error_message = '';
+        $mail_error_hook    = static function ( $wp_error ) use ( &$mail_error_message ) {
+            if ( $wp_error instanceof WP_Error ) {
+                $mail_error_message = $wp_error->get_error_message();
+            }
+        };
+
+        add_action( 'wp_mail_failed', $mail_error_hook );
 
         if ( wp_mail( $admin_email, $email_subject, $email_body, $headers ) ) {
             $form_status = 'success';
@@ -65,8 +71,12 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['stavros_contact_sub
                 'message' => '',
             ];
         } else {
-            $form_errors[] = 'Message could not be sent right now. Please try again shortly.';
+            $form_errors[] = $mail_error_message
+                ? 'Message could not be sent right now: ' . $mail_error_message
+                : 'Message could not be sent right now. Please try again shortly.';
         }
+
+        remove_action( 'wp_mail_failed', $mail_error_hook );
     } elseif ( empty( $form_errors ) ) {
         $form_errors[] = 'The site email address is not configured yet.';
     }
