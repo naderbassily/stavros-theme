@@ -6,80 +6,19 @@ Template Name: Contact Us
 $admin_email           = stavros_contact_recipient_email();
 $display_contact_email = stavros_contact_display_email();
 $contact_link          = 'mailto:' . antispambot( $display_contact_email );
-$form_values   = [
+$form_values = [
     'name'    => '',
     'email'   => '',
     'subject' => '',
     'message' => '',
 ];
-$form_errors   = [];
-$form_status   = '';
+$form_errors = [];
+$form_status = isset( $_GET['contact_status'] ) ? sanitize_key( wp_unslash( $_GET['contact_status'] ) ) : '';
 
-if ( 'POST' === $_SERVER['REQUEST_METHOD'] && isset( $_POST['stavros_contact_submit'] ) ) {
-    $form_values['name']    = isset( $_POST['contact_name'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_name'] ) ) : '';
-    $form_values['email']   = isset( $_POST['contact_email'] ) ? sanitize_email( wp_unslash( $_POST['contact_email'] ) ) : '';
-    $form_values['subject'] = isset( $_POST['contact_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_subject'] ) ) : '';
-    $form_values['message'] = isset( $_POST['contact_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['contact_message'] ) ) : '';
-
-    if ( ! isset( $_POST['stavros_contact_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['stavros_contact_nonce'] ) ), 'stavros_contact_form' ) ) {
-        $form_errors[] = 'Security check failed. Please try again.';
-    }
-
-    if ( '' === $form_values['name'] ) {
-        $form_errors[] = 'Please enter your name.';
-    }
-
-    if ( '' === $form_values['email'] || ! is_email( $form_values['email'] ) ) {
-        $form_errors[] = 'Please enter a valid email address.';
-    }
-
-    if ( '' === $form_values['subject'] ) {
-        $form_errors[] = 'Please add a subject.';
-    }
-
-    if ( '' === $form_values['message'] ) {
-        $form_errors[] = 'Please enter your message.';
-    }
-
-    if ( empty( $form_errors ) && $admin_email ) {
-        $email_subject = sprintf( 'Contact Form: %s', $form_values['subject'] );
-        $email_body    = implode(
-            "\n\n",
-            [
-                'Name: ' . $form_values['name'],
-                'Email: ' . $form_values['email'],
-                'Subject: ' . $form_values['subject'],
-                "Message:\n" . $form_values['message'],
-            ]
-        );
-        $headers            = stavros_contact_mail_headers( $form_values['name'], $form_values['email'] );
-        $mail_error_message = '';
-        $mail_error_hook    = static function ( $wp_error ) use ( &$mail_error_message ) {
-            if ( $wp_error instanceof WP_Error ) {
-                $mail_error_message = $wp_error->get_error_message();
-            }
-        };
-
-        add_action( 'wp_mail_failed', $mail_error_hook );
-
-        if ( wp_mail( $admin_email, $email_subject, $email_body, $headers ) ) {
-            $form_status = 'success';
-            $form_values = [
-                'name'    => '',
-                'email'   => '',
-                'subject' => '',
-                'message' => '',
-            ];
-        } else {
-            $form_errors[] = $mail_error_message
-                ? 'Message could not be sent right now: ' . $mail_error_message
-                : 'Message could not be sent right now. Please try again shortly.';
-        }
-
-        remove_action( 'wp_mail_failed', $mail_error_hook );
-    } elseif ( empty( $form_errors ) ) {
-        $form_errors[] = 'The site email address is not configured yet.';
-    }
+if ( 'error' === $form_status ) {
+    $form_errors[] = isset( $_GET['contact_error'] ) && '' !== trim( (string) wp_unslash( $_GET['contact_error'] ) )
+        ? sanitize_text_field( wp_unslash( $_GET['contact_error'] ) )
+        : 'Message could not be sent right now. Please try again shortly.';
 }
 
 get_header();
@@ -110,7 +49,7 @@ get_header();
     </div>
 
     <div class="contact-page-form-card">
-      <?php if ( 'success' === $form_status ) : ?>
+      <?php if ( 'sent' === $form_status ) : ?>
       <div class="contact-page-alert contact-page-alert-success">
         Your message was sent successfully.
       </div>
@@ -124,7 +63,8 @@ get_header();
       </div>
       <?php endif; ?>
 
-      <form method="post" class="contact-page-form">
+      <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="contact-page-form">
+        <input type="hidden" name="action" value="stavros_contact_form">
         <?php wp_nonce_field( 'stavros_contact_form', 'stavros_contact_nonce' ); ?>
 
         <div class="contact-page-field">

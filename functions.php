@@ -177,16 +177,13 @@ function stavros_contact_display_email() {
 }
 
 function stavros_contact_from_email() {
-    $host = wp_parse_url( home_url(), PHP_URL_HOST );
-    $host = $host ? preg_replace( '/^www\./i', '', $host ) : 'localhost';
-
-    return 'no-reply@' . $host;
+    return stavros_contact_display_email();
 }
 
 function stavros_contact_mail_headers( $reply_name = '', $reply_email = '' ) {
     $headers = [
         'Content-Type: text/plain; charset=UTF-8',
-        'From: Stavros Basta Website <' . stavros_contact_from_email() . '>',
+        'From: Stavros Basta <' . stavros_contact_from_email() . '>',
     ];
 
     if ( $reply_name && $reply_email && is_email( $reply_email ) ) {
@@ -195,6 +192,67 @@ function stavros_contact_mail_headers( $reply_name = '', $reply_email = '' ) {
 
     return $headers;
 }
+
+function stavros_handle_contact_form_submission() {
+    $redirect_url = wp_get_referer() ? wp_get_referer() : stavros_contact_url();
+    $redirect_url = remove_query_arg( [ 'contact_status', 'contact_error' ], $redirect_url );
+
+    if ( ! isset( $_POST['stavros_contact_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['stavros_contact_nonce'] ) ), 'stavros_contact_form' ) ) {
+        wp_safe_redirect( add_query_arg( 'contact_status', 'error', $redirect_url ) );
+        exit;
+    }
+
+    $name    = isset( $_POST['contact_name'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_name'] ) ) : '';
+    $email   = isset( $_POST['contact_email'] ) ? sanitize_email( wp_unslash( $_POST['contact_email'] ) ) : '';
+    $subject = isset( $_POST['contact_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['contact_subject'] ) ) : '';
+    $message = isset( $_POST['contact_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['contact_message'] ) ) : '';
+
+    if ( ! $name || ! is_email( $email ) || ! $subject || ! $message ) {
+        wp_safe_redirect( add_query_arg( 'contact_status', 'error', $redirect_url ) );
+        exit;
+    }
+
+    $mail_error_message = '';
+    $mail_error_hook    = static function ( $wp_error ) use ( &$mail_error_message ) {
+        if ( $wp_error instanceof WP_Error ) {
+            $mail_error_message = $wp_error->get_error_message();
+        }
+    };
+
+    add_action( 'wp_mail_failed', $mail_error_hook );
+
+    $sent = wp_mail(
+        stavros_contact_recipient_email(),
+        sprintf( __( 'Stavros Basta contact form: %s', 'stavros-basta' ), $subject ),
+        sprintf(
+            "Name: %1\$s\nEmail: %2\$s\nSubject: %3\$s\n\nMessage:\n%4\$s",
+            $name,
+            $email,
+            $subject,
+            $message
+        ),
+        stavros_contact_mail_headers( $name, $email )
+    );
+
+    remove_action( 'wp_mail_failed', $mail_error_hook );
+
+    if ( ! $sent && $mail_error_message ) {
+        $redirect_url = add_query_arg(
+            [
+                'contact_status' => 'error',
+                'contact_error'  => rawurlencode( $mail_error_message ),
+            ],
+            $redirect_url
+        );
+        wp_safe_redirect( $redirect_url );
+        exit;
+    }
+
+    wp_safe_redirect( add_query_arg( 'contact_status', $sent ? 'sent' : 'error', $redirect_url ) );
+    exit;
+}
+add_action( 'admin_post_stavros_contact_form', 'stavros_handle_contact_form_submission' );
+add_action( 'admin_post_nopriv_stavros_contact_form', 'stavros_handle_contact_form_submission' );
 
 function stavros_get_result_excerpt( $post_id = null, $word_count = 28 ) {
     $post = get_post( $post_id ?: get_the_ID() );
