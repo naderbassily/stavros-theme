@@ -1959,8 +1959,9 @@ footer {
   .hero-content {
     width: 100%;
     min-height: calc(100vh - 110px);
+    justify-content: flex-end;
     padding-top: 76px;
-    padding-bottom: 72px;
+    padding-bottom: 20px;
   }
   .hero-name {
     font-size: 3.1rem;
