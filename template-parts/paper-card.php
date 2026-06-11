@@ -3,8 +3,10 @@
  * Reusable paper card.
  */
 
-$paper_url  = stavros_custom_field( 'paper_url' ) ?: get_permalink();
+$permalink  = get_permalink();
+$paper_url  = stavros_custom_field( 'paper_url' ) ?: $permalink;
 $paper_text = get_the_excerpt();
+$is_external = $paper_url && $paper_url !== $permalink;
 $title_tag  = isset( $args['title_tag'] ) && in_array( $args['title_tag'], [ 'h2', 'h3' ], true )
     ? $args['title_tag']
     : 'h3';
@@ -15,7 +17,7 @@ if ( '' === trim( $paper_text ) ) {
 ?>
 
 <article <?php post_class( 'pub-card' ); ?>>
-  <a class="pub-card-link" href="<?php echo esc_url( $paper_url ); ?>" target="_blank" rel="noopener noreferrer">
+  <a class="pub-card-link" href="<?php echo esc_url( $paper_url ); ?>"<?php echo $is_external ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
     <<?php echo esc_html( $title_tag ); ?> class="pub-title"><?php the_title(); ?></<?php echo esc_html( $title_tag ); ?>>
     <?php if ( '' !== trim( $paper_text ) ) : ?>
       <p class="pub-card-text"><?php echo esc_html( $paper_text ); ?></p>

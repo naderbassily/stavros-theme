@@ -124,6 +124,86 @@ function stavros_contact_url() {
     return stavros_section_url( 'contact' );
 }
 
+function stavros_get_result_excerpt( $post_id = null, $word_count = 28 ) {
+    $post = get_post( $post_id ?: get_the_ID() );
+
+    if ( ! $post instanceof WP_Post ) {
+        return '';
+    }
+
+    $excerpt = trim( get_the_excerpt( $post ) );
+    if ( '' !== $excerpt ) {
+        return $excerpt;
+    }
+
+    return wp_trim_words( wp_strip_all_tags( strip_shortcodes( $post->post_content ) ), $word_count );
+}
+
+function stavros_get_search_paper_results( $search_term ) {
+    $search_term = trim( (string) $search_term );
+    if ( '' === $search_term ) {
+        return [];
+    }
+
+    $results          = [];
+    $registered_types = array_values(
+        array_filter(
+            [ 'paper', 'papers' ],
+            'post_type_exists'
+        )
+    );
+
+    if ( ! empty( $registered_types ) ) {
+        $paper_query = new WP_Query(
+            [
+                'post_type'           => $registered_types,
+                'post_status'         => 'publish',
+                'posts_per_page'      => -1,
+                's'                   => $search_term,
+                'orderby'             => 'date',
+                'order'               => 'DESC',
+                'no_found_rows'       => true,
+                'ignore_sticky_posts' => true,
+            ]
+        );
+
+        foreach ( $paper_query->posts as $paper_post ) {
+            $results[ $paper_post->ID ] = $paper_post;
+        }
+    }
+
+    $papers_category = get_category_by_slug( 'papers' );
+    if ( $papers_category instanceof WP_Term ) {
+        $paper_posts_query = new WP_Query(
+            [
+                'post_type'           => 'post',
+                'post_status'         => 'publish',
+                'posts_per_page'      => -1,
+                's'                   => $search_term,
+                'orderby'             => 'date',
+                'order'               => 'DESC',
+                'no_found_rows'       => true,
+                'ignore_sticky_posts' => true,
+                'cat'                 => (int) $papers_category->term_id,
+            ]
+        );
+
+        foreach ( $paper_posts_query->posts as $paper_post ) {
+            $results[ $paper_post->ID ] = $paper_post;
+        }
+    }
+
+    $results = array_values( $results );
+    usort(
+        $results,
+        static function ( $left, $right ) {
+            return strtotime( $right->post_date_gmt ?: $right->post_date ) <=> strtotime( $left->post_date_gmt ?: $left->post_date );
+        }
+    );
+
+    return $results;
+}
+
 
 // ── Book archive query controls ────────────────────────────
 function stavros_modify_book_archive_query( $query ) {
