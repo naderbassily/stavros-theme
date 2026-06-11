@@ -4,10 +4,21 @@ Template Name: About Stavros
 */
 
 get_header();
+
+$about_hero_style = '';
+if ( has_post_thumbnail() ) {
+    $about_hero_image = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+    if ( $about_hero_image ) {
+        $about_hero_style = sprintf(
+            "background-image: linear-gradient(rgba(10, 10, 10, 0.44), rgba(10, 10, 10, 0.44)), url('%s');",
+            esc_url( $about_hero_image )
+        );
+    }
+}
 ?>
 
 <main class="about-page">
-  <section class="about-hero">
+  <section class="about-hero"<?php echo $about_hero_style ? ' style="' . esc_attr( $about_hero_style ) . '"' : ''; ?>>
     <div class="about-hero-inner">
       <p class="about-eyebrow">// About Stavros</p>
       <h1 class="about-title">Stavros E. Basta</h1>

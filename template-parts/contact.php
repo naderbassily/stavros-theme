@@ -7,7 +7,7 @@
     <p class="contact-text">
       Available for keynote speaking, executive consulting, academic collaboration, and expert advisory engagements in cybersecurity, ICS protection, and critical infrastructure resilience.
     </p>
-    <a href="#contact-details" class="btn-primary-dark">View Engagement Details</a>
+    <a href="<?php echo esc_url( stavros_contact_url() ); ?>" class="btn-primary-dark">Contact</a>
   </div>
 
   <div class="contact-right" id="contact-details">

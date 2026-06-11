@@ -8,6 +8,7 @@ function stavros_setup() {
 
     register_nav_menus( [
         'primary' => __( 'Primary Navigation', 'stavros-basta' ),
+        'footer'  => __( 'Footer Navigation', 'stavros-basta' ),
     ] );
 }
 add_action( 'after_setup_theme', 'stavros_setup' );

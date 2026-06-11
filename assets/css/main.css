@@ -615,12 +615,29 @@ footer {
   display: flex; justify-content: space-between; align-items: center;
   border-top: 1px solid var(--border-dark);
 }
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
 .footer-logo { display: flex; align-items: center; text-decoration: none; }
 .footer-logo-img { display: block; height: 28px; width: auto; }
-.footer-copy  { font-size: 0.7rem; color: var(--text-faint); letter-spacing: 0.08em; }
+.footer-copy  { font-size: 0.7rem; color: var(--mid-light); letter-spacing: 0.08em; }
 .footer-links { display: flex; gap: 32px; list-style: none; }
 .footer-links a { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-quiet-dark); text-decoration: none; transition: color 0.2s; }
 .footer-links a:hover { color: var(--white); }
+.footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+}
+.footer-social-icon {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
 
 /* ── ABOUT PAGE ────────────────────────────────────────────── */
 .about-page {
@@ -630,6 +647,9 @@ footer {
 .about-hero {
   padding: 160px var(--h-pad) 110px;
   background: var(--black);
+  background-size: contain;
+  background-position: left center;
+  background-repeat: no-repeat;
   color: var(--white);
   border-bottom: 1px solid var(--border-dark);
 }

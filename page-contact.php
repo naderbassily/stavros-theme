@@ -3,9 +3,9 @@
 Template Name: Contact Us
 */
 
-$admin_email   = sanitize_email( get_option( 'admin_email' ) );
-$contact_email = $admin_email ? $admin_email : 'contact@example.com';
-$contact_link  = $admin_email ? 'mailto:' . antispambot( $admin_email ) : '#';
+$admin_email           = 'me@naderamsis.com';
+$display_contact_email = 'contact@stavrosbasta.com';
+$contact_link          = 'mailto:' . antispambot( $admin_email );
 $form_values   = [
     'name'    => '',
     'email'   => '',
@@ -96,7 +96,7 @@ get_header();
       <p class="contact-page-copy">
         Include who you are, what you need, and any relevant dates or scope. That is enough to start the conversation.
       </p>
-      <a href="<?php echo esc_url( $contact_link ); ?>" class="contact-page-direct-link"><?php echo esc_html( antispambot( $contact_email ) ); ?></a>
+      <a href="<?php echo esc_url( $contact_link ); ?>" class="contact-page-direct-link"><?php echo esc_html( antispambot( $display_contact_email ) ); ?></a>
     </div>
 
     <div class="contact-page-form-card">
