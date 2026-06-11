@@ -1,5 +1,49 @@
 <?php
 
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+if ( ! defined( 'STAVROS_BASTA_VERSION' ) ) {
+    define( 'STAVROS_BASTA_VERSION', '1.0.5' );
+}
+
+function stavros_get_github_update_token() {
+    if ( defined( 'STAVROS_BASTA_GITHUB_TOKEN' ) && STAVROS_BASTA_GITHUB_TOKEN ) {
+        return (string) STAVROS_BASTA_GITHUB_TOKEN;
+    }
+
+    $token = getenv( 'STAVROS_BASTA_GITHUB_TOKEN' );
+
+    return $token ? (string) $token : '';
+}
+
+function stavros_init_github_theme_updater() {
+    $puc_loader = get_template_directory() . '/inc/plugin-update-checker/plugin-update-checker.php';
+
+    if ( ! file_exists( $puc_loader ) ) {
+        return;
+    }
+
+    require_once $puc_loader;
+
+    if ( ! class_exists( PucFactory::class ) ) {
+        return;
+    }
+
+    $update_checker = PucFactory::buildUpdateChecker(
+        'https://github.com/naderbassily/stavros-theme/',
+        __FILE__,
+        'stavros-theme'
+    );
+
+    $update_checker->setBranch( 'main' );
+
+    $github_token = stavros_get_github_update_token();
+    if ( '' !== $github_token ) {
+        $update_checker->setAuthentication( $github_token );
+    }
+}
+stavros_init_github_theme_updater();
+
 // ── Theme setup ──────────────────────────────────────────────
 function stavros_setup() {
     add_theme_support( 'title-tag' );
