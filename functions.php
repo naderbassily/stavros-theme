@@ -169,7 +169,7 @@ function stavros_contact_url() {
 }
 
 function stavros_contact_recipient_email() {
-    return 'me@naderramsis.com';
+    return 'contact@stavrosbasta.com';
 }
 
 function stavros_contact_display_email() {
